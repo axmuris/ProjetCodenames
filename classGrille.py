@@ -18,3 +18,45 @@
 #MAJ Grille : A partir screen + couleur carte = verifie localement la couleur du centre de la carte (recouverte ou non)
             #MAJ attribut des cartes (recouverte ou non)
             #Check error
+
+from ctypes import sizeof
+import numpy as np
+import math
+import random
+from classCarte import Carte
+
+class Grille () : 
+    def __init__(self, n, screen) :
+        self.__grille = []
+
+        #Creation des cartes
+        matCarte = self.fDetecCarte(screen)
+        for ID in range (n*n) : 
+            #self.__grille[ID] = Carte(ID, matCarte[ID][0], matCarte[ID][1])
+            self.__grille.append(Carte(ID, [ID,'0'], "Hello"))
+
+        #Attribution des couleurs
+        self.fSetColors(n)
+
+    #Getter
+    def GetGrille(self,) : 
+        return self.__grille
+
+    def fDetecCarte(self, screen) : 
+        matCarte = []
+        screen = 0
+        #TODO : Detection des mots
+        return matCarte
+
+    def fSetColors(self, n) : 
+        CartesID = [ID for ID in range (n*n)]
+        random.shuffle(CartesID)
+
+        N = math.floor((n*n)/3)
+        color = ['r', 'b'] ; random.shuffle(color)
+        
+        for ID in CartesID[0:N+1] : 
+            self.__grille[ID].SetColor(color[0])
+        for ID in CartesID[N+1:2*N+1] : 
+            self.__grille[ID].SetColor(color[1])
+        self.__grille[CartesID[2*N+1]].SetColor('a')
