@@ -13,7 +13,6 @@
 #Atribution des couleurs : Par défauts toutes les cartes sont neutres
                         #Dans l'ordre genere aleatoirement rouge, bleu, puis assassin
                         #Attention : Vérif mot sans couleur
-                        #Création des listes maitre espion puis renvoie à partie
 
 #MAJ Grille : A partir screen + couleur carte = verifie localement la couleur du centre de la carte (recouverte ou non)
             #MAJ attribut des cartes (recouverte ou non)
@@ -26,6 +25,8 @@ import random
 from classCarte import Carte
 
 class Grille () : 
+    ################################################
+    #Initialisation
     def __init__(self, n, screen) :
         self.__grille = []
 
@@ -38,10 +39,13 @@ class Grille () :
         #Attribution des couleurs
         self.fSetColors(n)
 
+    ################################################
     #Getter
     def GetGrille(self,) : 
         return self.__grille
 
+    ################################################
+    #Methodes
     def fDetecCarte(self, screen) : 
         matCarte = []
         screen = 0
@@ -60,3 +64,14 @@ class Grille () :
         for ID in CartesID[N+1:2*N+1] : 
             self.__grille[ID].SetColor(color[1])
         self.__grille[CartesID[2*N+1]].SetColor('a')
+
+    def MAJ_Grille(self, screen) : #TODO : A tester
+        for carte in self.GetGrille() : 
+            #TODO : Defintion couleur au centre, pictColor
+            pictColor = 'r'
+            realColor = carte.GetColor()
+            if pictColor != realColor : 
+                print("Error : La couleur de la tuile ne correspond pas à la couleur associée à la carte")
+            else : 
+                carte.SetFind(True)
+

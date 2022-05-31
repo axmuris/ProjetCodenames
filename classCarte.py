@@ -11,7 +11,8 @@
                 #Analyse du mot (finalement dans grille) et MAJ attribut mot
 
 class Carte () :
-    #Constructeur d'une carte avec ses attributs par defaut
+    ################################################
+    #Initialisation
     def __init__ (self, ID, pos, mot):
         self.__ID = ID
         self.__coord = pos
@@ -20,6 +21,7 @@ class Carte () :
             #neutre = n, rouge = r, bleu = b, assassin = a
         self.__find = False
     
+    ################################################
     #Getters
     def GetID(self,) :
         return self.__ID
@@ -36,6 +38,7 @@ class Carte () :
     def GetFind(self,) : 
         return self.__find
 
+    ################################################
     #Setters
     def SetColor(self, couleur) :
         self.__color = couleur
