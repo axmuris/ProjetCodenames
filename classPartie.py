@@ -40,9 +40,13 @@ class Partie () :
         self.__etatPartie = 1
 
     ################################################
+    #Getter
+    def GetPlateau(self,) : 
+        return self.__plateau
+
+    ################################################
     #Methodes
     def MAJ_Partie(self,) : # TODO : A tester
-
         for carte in self.__plateau.GetGrille() : 
             #MAJ des listes maitre espion
             if carte.GetColor() == 'r' and carte.GetFind() == False : 
@@ -67,6 +71,5 @@ class Partie () :
         #MAJ etat de la partie
         if self.__motifFin != 'n' : 
             self.__etatPartie = 2
-            return self.__etatPartie, self.__motifFin
 
-        return self.__etatPartie
+        return self.__etatPartie, self.__motifFin
