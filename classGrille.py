@@ -47,6 +47,9 @@ class Grille () :
 
     ################################################
     #Methodes
+
+    #Fonction de detection des cartes : lis les mots sur les cartes et renvoie une matrice contenant 
+        #Les coordonées du rectangle autour du mot, le mot trouvé, la probabilité que le resultat soit juste
     def fDetecCarte(self, screen,n) : 
         matCarte = []
         screen = 0
@@ -68,6 +71,7 @@ class Grille () :
 
         return matCarte
 
+    #Methode permettant de definir les couleurs des cartes pour les maîtres espions en début de partie
     def fSetColors(self, n) : 
         CartesID = [ID for ID in range (n*n)]
         random.shuffle(CartesID)
@@ -81,6 +85,7 @@ class Grille () :
             self.__grille[ID].SetColor(color[1])
         self.__grille[CartesID[2*N+1]].SetColor('a')
 
+    #Methode permettant de mettre a jour le parametre find des cartes en fonction de l'avancement dans le partie
     def MAJ_Grille(self, screen) : #TODO : A tester
         for carte in self.GetGrille() : 
             #TODO : Defintion couleur au centre, pictColor

@@ -7,6 +7,8 @@
     #Lancement du code principal avec paramètres
     #A termes sera remplace par la fonction de gestion de la Caméra
 
+import easyocr
+
 from classCarte import Carte
 from classGrille import Grille
 from classPartie import Partie
@@ -25,7 +27,12 @@ carte2.SetFind(True)
 carte2.Affichage()
 
 #Test Creation d'une grille : OK
-grille1 = Grille(4, 0)
+#grille1 = Grille(4, 0)
 
 #Test Creation d'une partie
-partie1 = Partie(0)
+#partie1 = Partie(0)
+
+#Test detection de mot
+reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
+result = reader.readtext("prout.jpg")
+print( result)
