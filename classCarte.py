@@ -26,7 +26,7 @@ class Carte () :
     def GetID(self,) :
         return self.__ID
 
-    def GetPos(self,) : 
+    def GetCoord(self,) : 
         return self.__coord
 
     def GetWord(self,) : 
