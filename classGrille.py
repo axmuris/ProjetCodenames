@@ -55,20 +55,38 @@ class Grille () :
         """
         reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
         result = reader.readtext(screen)
-        for i in range [0,len(result)-1]:
-            if result[i][5]<=0.6:
-                result[i].pop()
-        if len(result)<n*n:   
+
+        indiceSuppr=[] #Liste d'indice des mot à supprimer
+        for resul in result:
+            if resul[2]<=0.1: #retire le mot si proba<0.1
+                indiceSuppr.append(result.index(resul))
+            elif len(resul[1])<=2: #retire le mot si 2 lettres ou moins
+                indiceSuppr.append(result.index(resul))
+            else: #retire le mot si présence d'un caractère bizarre
+                sup=0
+                for lettre in resul[1]:
+                    l=ord(lettre) #conversion de la lettre en code Ascii
+                    if ((l in range(33,64)) or (l in range(91,96)) or (l in range(123,126))): #liste des caractères étranges
+                        sup=1
+                if sup==1:
+                    indiceSuppr.append(result.index(resul))
+
+        for i in sorted(indiceSuppr, reverse=True): #suppression des mots de la liste d'indice
+            del(result[i])
+
+        #test du nombre de mot 
+        if len(result)<(n*n): #Si pas assez de mot, message d'erreur (et renvoit code erreur?) 
             print("Erreur, tous les mot n'ont pas été détecté. Vérifiez qu'il y ai bien un carré de",n,"*",n,"sur la grille.")
-        elif len(result)>n*n:
+        
+        elif len(result)>n*n: #Si trop de mot, supprime les mots les plus improbables
             while len(result)!=n*n:
                 probmin=1
-                for j in range[0,len(result)]:
-                    if result[j][5]<probmin:
-                        probmin=result[j]
-                        indicemin=j
-                result[indicemin].pop()
-        #TODO : Test <0.1 puis 1-2 lettres puis Ascii puis + faible proba
+                for resul in result:
+                    if resul[2]<probmin:
+                        probmin=resul[2]
+                        motfaible=resul
+                result.pop(result.index(motfaible))
+        
 
         #set mot
         """

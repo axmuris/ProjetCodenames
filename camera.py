@@ -15,8 +15,8 @@ from fctImage import fLPE
 from classPartie import Partie
 
 # 0 = Use  local webcam
-# 1 = Use peripheric webcam
-cam = 0
+# 1 = Use peripheric webcam (contrast=4%, brigthness=0%) 
+cam = 1
 
 cap = cv2.VideoCapture(cam)
 
