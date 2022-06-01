@@ -6,7 +6,7 @@
 #Fichier Camera :
     # Gere les envois de la camera, et l'affichage du stream
   
-import cv2, platform,time
+import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
