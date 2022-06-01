@@ -50,12 +50,12 @@ class Grille () :
     def fDetecCarte(self, screen,n) : 
         matCarte = []
         screen = 0
-        reader = easyocr.Reader(['en']) # this needs to run only once to load the model into memory
+        reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
         result = reader.readtext(screen)
         for i in range [0,len(result)-1]:
             if result[i][5]<=0.6:
                 result[i].pop()
-        if len(result)<n*n:
+        if len(result)<n*n:   
             print("Erreur, tous les mot n'ont pas été détecté. Vérifiez qu'il y ai bien un carré de",n,"*",n,"sur la grille.")
         elif len(result)>n*n:
             while len(result)!=n*n:
@@ -65,6 +65,10 @@ class Grille () :
                         probmin=result[j]
                         indicemin=j
                 result[indicemin].pop()
+#<0.1 puis 1-2 lettres puis Ascii pui + faible proba
+
+        #set mot
+
 
         return matCarte
 
