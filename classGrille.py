@@ -36,7 +36,6 @@ class Grille () :
         matCarte = self.fDetecCarte(screen, n)
         for ID in range (n*n) : 
             self.__grille.append(Carte(ID, matCarte[ID][0], matCarte[ID][1]))
-            #self.__grille.append(Carte(ID, [ID,'0'], "Hello"))
 
         #Attribution des couleurs
         self.fSetColors(n)
