@@ -9,6 +9,7 @@
 import cv2, platform,time
 import matplotlib.pyplot as plt
 import numpy as np
+import classCarte,classGrille,classPartie
 
 # 0 = Use  local webcam
 # 1 = Use peripheric webcam
@@ -19,6 +20,7 @@ cap = cv2.VideoCapture(cam)
 if not cap:
     print("!!! Failed VideoCapture: invalid parameter!")
 
+ret, current_frame = cap.read()
 
 
 

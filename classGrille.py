@@ -22,6 +22,7 @@ from ctypes import sizeof
 import numpy as np
 import math
 import random
+import easyocr
 from classCarte import Carte
 
 class Grille () : 
@@ -46,10 +47,25 @@ class Grille () :
 
     ################################################
     #Methodes
-    def fDetecCarte(self, screen) : 
+    def fDetecCarte(self, screen,n) : 
         matCarte = []
         screen = 0
-        #TODO : Detection des mots
+        reader = easyocr.Reader(['en']) # this needs to run only once to load the model into memory
+        result = reader.readtext(screen)
+        for i in range [0,len(result)-1]:
+            if result[i][5]<=0.6:
+                result[i].pop()
+        if len(result)<n*n:
+            print("Erreur, tous les mot n'ont pas été détecté. Vérifiez qu'il y ai bien un carré de",n,"*",n,"sur la grille.")
+        elif len(result)>n*n:
+            while len(result)!=n*n:
+                probmin=1
+                for j in range[0,len(result)]:
+                    if result[j][5]<probmin:
+                        probmin=result[j]
+                        indicemin=j
+                result[indicemin].pop()
+
         return matCarte
 
     def fSetColors(self, n) : 
