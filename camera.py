@@ -9,8 +9,8 @@
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-import classCarte,classGrille,classPartie
 
+from affichage import fAffichage
 from classPartie import Partie
 
 # 0 = Use  local webcam
@@ -22,14 +22,12 @@ cap = cv2.VideoCapture(cam)
 if not cap:
     print("!!! Failed VideoCapture: invalid parameter!")
 
+#Premère capture
 ret, current_frame = cap.read()
 
-#Prendre un screen
-
-
 #Initialisation de la partie
-newPartie = Partie(screen) #screen a definir
-#Maj affichage ???
+newPartie = Partie(current_frame) #screen a definir
+current_frame = fAffichage(newPartie, current_frame)
 
 while(True): #Condition arret = partie finie
 
@@ -41,7 +39,7 @@ while(True): #Condition arret = partie finie
     etat, motifEnd = newPartie.MAJ_Partie()
     
     #MAJ Affichage 
-    affichage(screen)
+    current_frame = fAffichage(newPartie, current_frame)
 
     #retour webcam
     cv2.imshow('retour',current_frame)
@@ -55,21 +53,3 @@ while(True): #Condition arret = partie finie
 # release the capture
 cap.release()
 cv2.destroyAllWindows()
-
-
-def Affichage(screen) : 
-    #NB : Ne colorie qu'un seul pixel pour l'instant
-    #TODO : A revoir / Completer
-    for carte in newPartie.GetPlateau().GetGrille() : 
-        if carte.GetColor() == 'b' : 
-            screen[carte.GetCoord[0][0], carte.GetCoord[0][1], 0] = 0
-            screen[carte.GetCoord[0][0], carte.GetCoord[0][1], 1] = 0
-            screen[carte.GetCoord[0][0], carte.GetCoord[0][1], 2] = 255
-        elif carte.GetColor() == 'r' : 
-            screen[carte.GetCoord[0][0], carte.GetCoord[0][1], 0] = 255
-            screen[carte.GetCoord[0][0], carte.GetCoord[0][1], 1] = 0
-            screen[carte.GetCoord[0][0], carte.GetCoord[0][1], 2] = 0
-        if carte.GetColor() == 'a' : 
-            screen[carte.GetCoord[0][0], carte.GetCoord[0][1], 0] = 0
-            screen[carte.GetCoord[0][0], carte.GetCoord[0][1], 1] = 0
-            screen[carte.GetCoord[0][0], carte.GetCoord[0][1], 2] = 0
