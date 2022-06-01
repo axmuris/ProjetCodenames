@@ -14,8 +14,8 @@ import classCarte,classGrille,classPartie
 from classPartie import Partie
 
 # 0 = Use  local webcam
-# 1 = Use peripheric webcam
-cam = 0
+# 1 = Use peripheric webcam (contrast=4%, brigthness=0%) 
+cam = 1
 
 cap = cv2.VideoCapture(cam)
 
@@ -41,7 +41,7 @@ while(True): #Condition arret = partie finie
     etat, motifEnd = newPartie.MAJ_Partie()
     
     #MAJ Affichage 
-    Affichage(screen)
+    affichage(screen)
 
     #retour webcam
     cv2.imshow('retour',current_frame)
