@@ -35,8 +35,7 @@ class Grille () :
         #Creation des cartes
         matCarte = self.fDetecCarte(screen, n)
         for ID in range (n*n) : 
-            self.__grille.append(Carte(ID, matCarte[ID][0], matCarte[ID][1]))
-            #self.__grille.append(Carte(ID, [ID,'0'], "Hello"))
+            self.__grille.append(Carte(ID, matCarte[ID][0], matCarte[ID][1].upper()))
 
         #Attribution des couleurs
         self.fSetColors(n)
@@ -53,16 +52,15 @@ class Grille () :
         #Les coordonées du rectangle autour du mot, le mot trouvé, la probabilité que le resultat soit juste
     def fDetecCarte(self, screen,n) : 
         matCarte = []
-        """
         reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
-        result = reader.readtext(screen)
+        matCarte = reader.readtext(screen)
 
         indiceSuppr=[] #Liste d'indice des mot à supprimer
-        for resul in result:
+        for resul in matCarte:
             if resul[2]<=0.1: #retire le mot si proba<0.1
-                indiceSuppr.append(result.index(resul))
+                indiceSuppr.append(matCarte.index(resul))
             elif len(resul[1])<=2: #retire le mot si 2 lettres ou moins
-                indiceSuppr.append(result.index(resul))
+                indiceSuppr.append(matCarte.index(resul))
             else: #retire le mot si présence d'un caractère bizarre
                 sup=0
                 for lettre in resul[1]:
@@ -70,28 +68,44 @@ class Grille () :
                     if ((l in range(33,64)) or (l in range(91,96)) or (l in range(123,126))): #liste des caractères étranges
                         sup=1
                 if sup==1:
-                    indiceSuppr.append(result.index(resul))
+                    indiceSuppr.append(matCarte.index(resul))
 
         for i in sorted(indiceSuppr, reverse=True): #suppression des mots de la liste d'indice
-            del(result[i])
+            del(matCarte[i])
+
+        ######Test mot, à supprimer après######
+        moyenne=0
+        probmin=1
+        min=0
+        for i in matCarte:
+            print(i,"\n")
+            moyenne=moyenne+i[2]
+            if i[2]<probmin:
+                probmin=i[2]
+                min=i
+
+        moyenne=moyenne/len(matCarte)
+        print("Moyenne:",moyenne)
+        print("Min:",min,"\n")
+        ######Test mot, à supprimer après######
 
         #test du nombre de mot 
-        if len(result)<(n*n): #Si pas assez de mot, message d'erreur (et renvoit code erreur?) 
+        if len(matCarte)<(n*n): #Si pas assez de mot, message d'erreur (et renvoit code erreur?) 
             print("Erreur, tous les mot n'ont pas été détecté. Vérifiez qu'il y ai bien un carré de",n,"*",n,"sur la grille.")
-        
-        elif len(result)>n*n: #Si trop de mot, supprime les mots les plus improbables
-            while len(result)!=n*n:
+            quit()
+        elif len(matCarte)>n*n: #Si trop de mot, supprime les mots les plus improbables
+            while len(matCarte)!=n*n:
                 probmin=1
-                for resul in result:
+                for resul in matCarte:
                     if resul[2]<probmin:
                         probmin=resul[2]
                         motfaible=resul
-                result.pop(result.index(motfaible))
+                matCarte.pop(matCarte.index(motfaible))
+        
         
 
-        #set mot
-        """
-
+        
+        '''
         matCarte = [ ([[28, 81], [99, 81], [99, 95], [28, 95]], 'RESTAURANT', 0.3543044810415938), 
                      ([[180, 86], [206, 86], [206, 94], [180, 94]], 'CHEF', 0.10739509761333466), 
                      ([[301, 85], [331, 85], [331, 97], [301, 97]], 'VERT', 0.571911096572876), 
@@ -117,6 +131,7 @@ class Grille () :
                      ([[299, 447], [339, 447], [339, 461], [299, 461]], 'DANSE', 0.9961014605773721), 
                      ([[421, 445], [479, 445], [479, 461], [421, 461]], 'FANTOME', 0.46388805167658925), 
                      ([[559, 447], [605, 447], [605, 461], [559, 461]], 'ESPION', 0.9934963953204257)    ] 
+                     '''
 
         return matCarte
 
