@@ -14,20 +14,23 @@ from classPartie import Partie
 
 # 0 = Use  local webcam
 # 1 = Use peripheric webcam
-cam = 1
+cam = 0
 
 cap = cv2.VideoCapture(cam)
 
-
-
 if not cap:
     print("!!! Failed VideoCapture: invalid parameter!")
+
+
+#Prendre un screen
+
 
 #Initialisation de la partie
 newPartie = Partie(screen) #screen a definir
 #Maj affichage ???
 
 while(True): #Condition arret = partie finie
+
     # Capture frame-by-frame
     ret, current_frame = cap.read()
 
