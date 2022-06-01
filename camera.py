@@ -4,14 +4,25 @@ import numpy as np
 
 # 0 = Use  local webcam
 # 1 = Use peripheric webcam
-cam = 1
+cam = 0
 
 cap = cv2.VideoCapture(cam)
 
-
-
 if not cap:
     print("!!! Failed VideoCapture: invalid parameter!")
+
+
+
+
+
+#Prendre un screen
+#Lancer initialisation de la partie
+
+
+
+
+
+
 
 while(True):
     # Capture frame-by-frame
