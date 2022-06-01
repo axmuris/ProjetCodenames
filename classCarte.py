@@ -20,6 +20,7 @@ class Carte () :
         self.__color = 'n'
             #neutre = n, rouge = r, bleu = b, assassin = a
         self.__find = False
+        self.__label = 0
     
     ################################################
     #Getters
@@ -38,6 +39,9 @@ class Carte () :
     def GetFind(self,) : 
         return self.__find
 
+    def GetLabel(self,) : 
+        return self.__label
+
     ################################################
     #Setters
     def SetColor(self, couleur) :
@@ -46,5 +50,10 @@ class Carte () :
     def SetFind(self, recouverte) : 
         self.__find = recouverte
 
+    def SetLabel(self, label) : 
+        self.__label = label
+
+    ################################################
+    #Methode
     def Affichage(self,) : 
-        print("ID : ", self.__ID, " Position : ", self.__coord, " Mot : ", self.__word, " Couleur : ", self.__color, " Recouverte : ", self.__find, "\n")
+        print("ID : ", self.__ID, " Position : ", self.__coord, " Mot : ", self.__word, " Couleur : ", self.__color, " Recouverte : ", self.__find, " Label : ", self.__label, "\n")

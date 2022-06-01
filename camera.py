@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from affichage import fAffichage
+from fctImage import fLPE
 from classPartie import Partie
 
 # 0 = Use  local webcam
@@ -29,6 +30,9 @@ ret, current_frame = cap.read()
 newPartie = Partie(current_frame)
 
 current_frame = fAffichage(newPartie, current_frame)
+#Initialisation des matrices d'affichage
+ImLabel = fLPE(newPartie, current_frame)
+#Attribution des label aux cartes
 
 
 while True:
