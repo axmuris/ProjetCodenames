@@ -55,6 +55,8 @@ class Grille () :
 
         """
         reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
+
+        screen=cv2.cvtColor(screen,cv2.COLOR_BGR2GRAY)
         matCarte = reader.readtext(screen)
 
         indiceSuppr=[] #Liste d'indice des mot à supprimer
@@ -154,14 +156,14 @@ class Grille () :
     def MAJ_Grille(self, screen) : #TODO : A tester
         for carte in self.GetGrille() : 
             #TODO : Defintion couleur au centre, pictColor
-            x0 = carte.GetCoord[0]
-            x1 = carte.GetCoord[1]
-            x2 = carte.GetCoord[2]
-            x3 = carte.GetCoord[3]
+            x0 = [math.ceil(carte.GetCoord()[0][0]),math.ceil(carte.GetCoord()[0][1])]
+            x1 = [math.ceil(carte.GetCoord()[1][0]),math.ceil(carte.GetCoord()[1][1])]
+            x2 = [math.ceil(carte.GetCoord()[2][0]),math.ceil(carte.GetCoord()[2][1])]
+            x3 = [math.ceil(carte.GetCoord()[3][0]),math.ceil(carte.GetCoord()[3][1])]
             rectColorTest = screen[np.arange(x0[0], x1[0], 1) , np.arange(x3[1]-x0[1], x0[1], 1)]
+            print(rectColorTest)
 
-
-            pictColor = 'r'
+            pictColor = 'r' #récupère la couleur de la carte sur le screen
             realColor = carte.GetColor()
             if pictColor != realColor : 
                 print("Error : La couleur de la tuile ne correspond pas à la couleur associée à la carte")
