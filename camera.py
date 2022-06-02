@@ -47,7 +47,7 @@ cv2.destroyAllWindows()
  # release the capture
 cap.release()
 '''
-while(True): #Condition arret = partie finie
+while(newPartie.__motifFin=='n'): #Condition arret = partie finie
 
     # Capture frame-by-frame
     ret, current_frame = cap.read()
@@ -62,13 +62,10 @@ while(True): #Condition arret = partie finie
     #retour webcam
     cv2.imshow('retour',current_frame)
 
-    #q pour fermer la fenêtre
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
+    cv2.waitkey('SPACE')
+'''
 
 
 # release the capture
 cap.release()
 cv2.destroyAllWindows()
-'''
