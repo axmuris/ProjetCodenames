@@ -7,7 +7,14 @@ import numpy as np
 import cv2
 from matplotlib import pyplot as plt
 import math
+from PIL import Image, ImageFont, ImageDraw
 
+
+################################################
+#Mise a jour de l'affichage
+################################################
+
+#Fonction principale d'affichage
 def fMajAff(Irgb, partie) :
     Igray = cv2.cvtColor(Irgb, cv2.COLOR_RGB2GRAY)
     ImLabel = fImCarte(Igray)
@@ -29,7 +36,7 @@ def fLPE(Ilabel, carteDist) :
         FAH_x.append([])
         FAH_y.append([])
 
-    n, m = Ilabel.shape
+    n, m = np.shape(Ilabel)
 
     for x in range (n) :
         for y in range (m) :
@@ -192,3 +199,28 @@ def fDessinTuile(partie, Irgb, ImLabel) :
                         Irgb[y, x , 2] = math.floor(color[2]*255)
 
     return Irgb
+
+
+################################################
+#Affichage Final
+################################################
+
+#Fonction affichant les conditions de fin de partie
+def fAffFin (partie) : 
+    end = partie.GetMotifFin()
+    print(end)
+    ImFinal = Image.new("RGB", (640, 480), (240,235,210))
+    image_editable = ImageDraw.Draw(ImFinal)
+    my_font = ImageFont.truetype('Shaka_Pow.ttf', 65)
+
+    if end == 'r' : 
+        image_editable.text((150, 240-70), "Victoire des", fill=(255, 0, 0), font=my_font)
+        image_editable.text((220, 240), "Rouges", fill=(255, 0, 0), font=my_font)
+    elif end == 'b' :
+        image_editable.text((150, 240-70), "Victoire des", fill=(0, 0, 255), font=my_font)
+        image_editable.text((240, 240), "Bleus", fill=(0, 0, 255), font=my_font)    
+    elif end == 'a' :
+        image_editable.text((180, 240-70), "Assassin", fill=(0, 0, 0), font=my_font)
+        image_editable.text((160, 240), "decouvert", fill=(0, 0, 0), font=my_font) 
+
+    return ImFinal

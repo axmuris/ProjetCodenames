@@ -52,6 +52,8 @@ class Grille () :
         #Les coordonées du rectangle autour du mot, le mot trouvé, la probabilité que le resultat soit juste
     def fDetecCarte(self, screen,n) : 
         matCarte = []
+
+        """
         reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
         matCarte = reader.readtext(screen)
 
@@ -101,11 +103,11 @@ class Grille () :
                         probmin=resul[2]
                         motfaible=resul
                 matCarte.pop(matCarte.index(motfaible))
-        
+        """
         
 
         
-        '''
+        
         matCarte = [ ([[28, 81], [99, 81], [99, 95], [28, 95]], 'RESTAURANT', 0.3543044810415938), 
                      ([[180, 86], [206, 86], [206, 94], [180, 94]], 'CHEF', 0.10739509761333466), 
                      ([[301, 85], [331, 85], [331, 97], [301, 97]], 'VERT', 0.571911096572876), 
@@ -131,7 +133,6 @@ class Grille () :
                      ([[299, 447], [339, 447], [339, 461], [299, 461]], 'DANSE', 0.9961014605773721), 
                      ([[421, 445], [479, 445], [479, 461], [421, 461]], 'FANTOME', 0.46388805167658925), 
                      ([[559, 447], [605, 447], [605, 461], [559, 461]], 'ESPION', 0.9934963953204257)    ] 
-                     '''
 
         return matCarte
 
