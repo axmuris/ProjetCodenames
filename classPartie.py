@@ -68,8 +68,4 @@ class Partie () :
         elif self.__motRouge == [] :
             self.__motifFin = 'r'
 
-        #MAJ etat de la partie
-        if self.__motifFin != 'n' : 
-            self.__etatPartie = 2
-
-        return self.__etatPartie, self.__motifFin
+        return

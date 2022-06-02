@@ -8,8 +8,8 @@ import cv2
 from matplotlib import pyplot as plt
 import math
 
-def fMajAff(Irgb, partie) :
-    Igray = cv2.cvtColor(Irgb, cv2.COLOR_RGB2GRAY)
+def fMajAff( partie,Irgb) :
+    Igray = cv2.cvtColor(Irgb, cv2.COLOR_BGR2GRAY)
     ImLabel = fImCarte(Igray)
     ImGrad = fImGrad(Igray)
 
@@ -29,7 +29,7 @@ def fLPE(Ilabel, carteDist) :
         FAH_x.append([])
         FAH_y.append([])
 
-    n, m = Ilabel.shape
+    n,m = np.shape(Ilabel)
 
     for x in range (n) :
         for y in range (m) :
