@@ -28,10 +28,25 @@ ret, current_frame = cap.read()
 
 #Initialisation de la partie
 newPartie = Partie(current_frame)
+
+current_frame = fAffichage(newPartie, current_frame)
 #Initialisation des matrices d'affichage
 ImLabel = fLPE(newPartie, current_frame)
 #Attribution des label aux cartes
 
+
+while True:
+    cv2.imshow('plateau',current_frame)
+
+    #q por fermer la fenêtre
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        stop=1
+        break
+
+cv2.destroyAllWindows()
+ # release the capture
+cap.release()
+'''
 while(True): #Condition arret = partie finie
 
     # Capture frame-by-frame
@@ -56,3 +71,4 @@ while(True): #Condition arret = partie finie
 # release the capture
 cap.release()
 cv2.destroyAllWindows()
+'''
