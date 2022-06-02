@@ -12,12 +12,13 @@ import cv2
 from matplotlib import pyplot as plt
 import numpy as np
 import math
+from PIL import Image, ImageFont, ImageDraw
 
 from classCarte import Carte
 from classGrille import Grille
 from classPartie import Partie
 from affichage import fAffichage
-from fctImage import fMajAff
+from fctImage import fAffFin, fMajAff
 
 #Test Creation d'une carte : OK
 #carte1 = Carte(0, [1,1], 'HELLO')
@@ -62,7 +63,7 @@ plt.figure()
 plt.imshow(Irgb)
 plt.show()
 """
-
+"""
 #Test fMajAff
 Irgb = cv2.imread('grille.png')
 partie1 = Partie(Irgb)
@@ -71,6 +72,7 @@ ImFinal = fMajAff(Irgb, partie1)
 plt.figure()
 plt.imshow(ImFinal)
 plt.show()
+"""
 
 """
 carte = partie1.GetPlateau().GetGrille()[5]
@@ -83,6 +85,17 @@ plt.figure()
 plt.imshow(IColor)
 plt.show()
 """
+
+#Test affichage de fin
+Irgb = cv2.imread('grille.png')
+partie1 = Partie(Irgb)
+partie1.SetMotifFin('a')
+
+ImFinal = fAffFin(partie1)
+
+plt.figure()
+plt.imshow(ImFinal)
+plt.show()
 
 #Test detection de mot
 #reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory

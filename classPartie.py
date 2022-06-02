@@ -40,9 +40,17 @@ class Partie () :
         self.__etatPartie = 1
 
     ################################################
-    #Getter
+    #Getters
     def GetPlateau(self,) : 
         return self.__plateau
+
+    def GetMotifFin(self,) : 
+        return self.__motifFin
+
+    ################################################
+    #Setter
+    def SetMotifFin(self, motif) : 
+        self.__motifFin = motif
 
     ################################################
     #Methodes
