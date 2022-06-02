@@ -6,36 +6,19 @@
 import numpy as np
 import cv2
 from matplotlib import pyplot as plt
+import math
 
+def fMajAff(Irgb, partie) :
+    Igray = cv2.cvtColor(Irgb, cv2.COLOR_RGB2GRAY)
+    ImLabel = fImCarte(Igray)
+    ImGrad = fImGrad(Igray)
 
-def fLPE(I) :
-    #################################################################
-    #Obtention des marqueurs
+    ImContour = fDessinContour(partie, Irgb, ImLabel, ImGrad)
+    ImFinal = fDessinTuile(partie, ImContour, ImLabel)
 
-    #Seuillage de l'image
-    [th, Iseuil] = cv2.threshold(I, 100, 255, cv2.THRESH_BINARY)
+    return ImFinal
 
-    #Isolation des marqueurs
-
-    #Definition de l'element structurant
-    s = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (10, 10))
-    #Erosion de l'image pour obtenir les marqueurs
-    Imark = cv2.erode(Iseuil, s)
-    Ifond = cv2.dilate(Iseuil, s)
-    #Ajout du marqueu de fond
-    Imark = Imark + (255 - Ifond)
-
-    #Attribution des labels uniques aux marqueurs
-    [nLabel, Ilabel] = cv2.connectedComponents(Imark)
-
-    #################################################################
-    #Obtention de la carte des distances
-
-    #NB : noir = priorite eleve
-    carteDist = cv2.distanceTransform(Iseuil, cv2.DIST_L2, 3)
-    carteDist = (255*carteDist)/np.amax(carteDist)  #maximum a 255
-    carteDist = Iseuil - carteDist  #priorite au centre des bonbons
-
+def fLPE(Ilabel, carteDist) :
     #################################################################
     #Algorithme LPE
 
@@ -91,17 +74,121 @@ def fLPE(I) :
 
     return Ilabel
 
+#Definition de l'image de label des cartes
+def fImCarte (I) :
+    #################################################################
+    #Obtention des marqueurs
+
+    #Seuillage de l'image
+    [th, Iseuil] = cv2.threshold(I, 100, 255, cv2.THRESH_BINARY)
+
+    #Definition de l'element structurant
+    s = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (10, 10))
+    #Erosion de l'image pour obtenir les marqueurs
+    Imark = cv2.erode(Iseuil, s)
+    Ifond = cv2.dilate(Iseuil, s)
+    #Ajout du marqueu de fond
+    Imark = Imark + (255 - Ifond)
+
+    #Attribution des labels uniques aux marqueurs
+    [nLabel, Ilabel] = cv2.connectedComponents(Imark)
+
+    #################################################################
+    #Obtention de la carte des distances
+
+    #NB : noir = priorite eleve
+    carteDist = cv2.distanceTransform(Iseuil, cv2.DIST_L2, 3)
+    carteDist = (255*carteDist)/np.amax(carteDist)  #maximum a 255
+    carteDist = Iseuil - carteDist
+
+    #################################################################
+    #Application de l'algorithme de LPE
+    ImLabel = fLPE(Ilabel, carteDist)
+
+    return ImLabel
 
 
+#Defintion des labels des gradient des cartes 
 def fImGrad (I) : 
+    #Seuillage de l'image
     [th, ImSeuil] = cv2.threshold(I, 100, 255, cv2.THRESH_BINARY)
 
+    #Isolation des cartes
     s = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (10, 10))
     
-    ImSeuil = cv2.morphologyEx(ImSeuil, cv2.MORPH_CLOSE, s)
     ImSeuil = cv2.morphologyEx(ImSeuil, cv2.MORPH_OPEN, s)
+    ImSeuil = cv2.morphologyEx(ImSeuil, cv2.MORPH_CLOSE, s)
 
-    ImGrad = cv2.Laplacian(ImSeuil, cv2.CV_64F)
+    #Calcul du gradient pour avoir le contour des cartes (marqueurs)
+    s = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
     ImGrad = cv2.erode(ImSeuil, s, 1) - cv2.dilate(ImSeuil, s, 1)
 
+    #Ajustement
+    s = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+    ImGrad = cv2.dilate(ImGrad, s, 1)
+
+    #Attribution des labels uniques aux marqueurs
+    [nLabel, ImGrad] = cv2.connectedComponents(ImGrad)
+
     return ImGrad
+
+#Fonction dessinant les contours sur la current frame
+    #plus attribution des labels aux cartes
+def fDessinContour (partie,Irgb, ImLabel, ImGrad) : 
+    for carte in partie.GetPlateau().GetGrille() : 
+        #Attribution du label associer a la carte
+        carte.SetLabel(ImLabel[carte.GetCoord()[0][1], carte.GetCoord()[0][0]])
+
+        #Initialisation de la couleur
+        color = [0,0,0]
+        if carte.GetColor() == 'b' :
+            color = [0,0,1]
+        elif carte.GetColor() == 'r' : 
+            color = [1,0,0]
+        elif carte.GetColor() == 'a' :
+            color = [0.18, 0.1, 0.3]
+        else :  #cartes neutre
+            color = [0.95, 0.8, 0.6]
+
+        #Initialisation du label de gradient de la carte
+        x = carte.GetCoord()[0]  #[x,y]
+        while ImGrad[x[1], x[0]] == 0 :
+            x[1] -= 1
+        labelGrad = ImGrad[x[1], x[0]]
+
+        #Colorisation des contours des cartes
+        for y in range (np.shape(Irgb)[0]):
+            for x in range (np.shape(Irgb)[1]) :
+                if ImGrad[y,x] == labelGrad :
+                    Irgb[y, x , 0] = math.floor(color[0]*255)
+                    Irgb[y, x , 1] = math.floor(color[1]*255)
+                    Irgb[y, x , 2] = math.floor(color[2]*255)
+
+    return Irgb
+
+
+#Fonction colorisant une carte si elle est recouverte
+def fDessinTuile(partie, Irgb, ImLabel) :
+    for carte in partie.GetPlateau().GetGrille() : 
+
+        if carte.GetFind() == True : 
+            #Initialisation de la couleur
+            color = [0,0,0]
+            if carte.GetColor() == 'b' :
+                color = [0,0,1]
+            elif carte.GetColor() == 'r' : 
+                color = [1,0,0]
+            elif carte.GetColor() == 'a' :
+                color = [0.18, 0.1, 0.3]
+            else :  #cartes neutre
+                color = [0.95, 0.8, 0.6]
+
+            #Colorisation des contours des cartes
+            for y in range (np.shape(Irgb)[0]):
+                for x in range (np.shape(Irgb)[1]) :
+                    if ImLabel[y,x] == carte.GetLabel() :
+                        Irgb[y, x , 0] = math.floor(color[0]*255)
+                        Irgb[y, x , 1] = math.floor(color[1]*255)
+                        Irgb[y, x , 2] = math.floor(color[2]*255)
+
+    return Irgb
