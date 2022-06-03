@@ -27,7 +27,7 @@ import random
 import easyocr
 from classCarte import Carte
 
-def detectionColor(coord,image,color1,color2): #color1=(5, 75, 25),color2=(25, 255, 255)
+def detectionColor(image,coord,color1,color2): #coord=[x,y],color1=(5, 75, 25),color2=(25, 255, 255)
     image=cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(image, color1,color2)
     if mask(coord)!=(0,0,0):
@@ -68,7 +68,20 @@ class Grille () :
         
         reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
 
-        screen=cv2.cvtColor(screen,cv2.COLOR_BGR2GRAY)
+        screen=cv2.cvtColor(screen,cv2.COLOR_RGB2HSV)
+
+        S=screen[:,:,1]
+        V=screen[:,:,2]
+
+        S=0.3*S
+        screen[:,:,1]=S
+
+        V=0.2*V
+        screen[:,:,2]=V
+
+        screen=cv2.cvtColor(screen,cv2.COLOR_HSV2RGB)
+        screen=cv2.cvtColor(screen,cv2.COLOR_RGB2GRAY)
+
         matCarte = reader.readtext(screen)
 
         indiceSuppr=[] #Liste d'indice des mot à supprimer
