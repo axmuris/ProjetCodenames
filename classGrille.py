@@ -19,7 +19,6 @@
             #Check error
 
 from ctypes import sizeof
-from cv2 import COLOR_BGR2HSV, cvtColor
 import numpy as np
 import math
 import cv2

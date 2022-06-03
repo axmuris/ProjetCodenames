@@ -51,7 +51,7 @@ while(newPartie.GetMotifFin()=='n'): #Condition arret = partie finie
     ret, current_frame = cap.read()
 
     #MAJ Partie
-    newPartie.GetPlateau().MAJ_Grille()
+    newPartie.GetPlateau().MAJ_Grille(current_frame)
     newPartie.MAJ_Partie()
     
     #MAJ Affichage 
