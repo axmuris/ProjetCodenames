@@ -29,7 +29,8 @@ ret, current_frame = cap.read()
 #Initialisation de la partie
 newPartie = Partie(current_frame)
 
-current_frame = fMajAff(newPartie, current_frame)
+createFin()
+current_frame, ImGrad, ImLabel = fInitAff(newPartie, current_frame)
 
 
 while True:
@@ -55,14 +56,45 @@ while(newPartie.GetMotifFin()=='n'): #Condition arret = partie finie
     newPartie.MAJ_Partie()
     
     #MAJ Affichage 
-    current_frame = fMajAff(newPartie, current_frame)
+    current_frame = fMajAff(newPartie, current_frame, ImGrad, ImLabel)
 
     #retour webcam
-    cv2.imshow('retour',current_frame)
+    cv2.imshow('plateau',current_frame)
 
 
 #affichage écran fin
+# Capture frame-by-frame
+ret, current_frame = cap.read()
 
+#MAJ Partie
+newPartie.GetPlateau().MAJ_Grille(current_frame)
+newPartie.MAJ_Partie()
+
+#MAJ Affichage 
+current_frame = fMajAff(newPartie, current_frame, ImGrad, ImLabel)
+
+#retour webcam
+cv2.imshow('plateau',current_frame)
+
+while(True):
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+#Affichage du motif de fin de partie
+if newPartie.GetMotifFin() == 'r' : 
+    ImFin = cv2.imread('ImFinRouge.png')
+elif newPartie.GetMotifFin() == 'b' : 
+    ImFin = cv2.imread('ImFinBleu.png')
+else :
+    ImFin = cv2.imread('ImFinAssassin.png')
+cv2.imshow('plateau',ImFin)
+
+
+while(True):
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+print("Fin de partie")
 
 # release the capture
 cap.release()

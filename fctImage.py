@@ -14,15 +14,20 @@ from PIL import Image, ImageFont, ImageDraw
 ################################################
 
 #Fonction principale d'affichage
-def fMajAff( partie,Irgb) :
-    Igray = cv2.cvtColor(Irgb, cv2.COLOR_BGR2GRAY)
-    ImLabel = fImCarte(Igray)
-    ImGrad = fImGrad(Igray)
-
+def fMajAff(partie, Irgb, ImGrad, ImLabel) :
     ImContour = fDessinContour(partie, Irgb, ImLabel, ImGrad)
     ImFinal = fDessinTuile(partie, ImContour, ImLabel)
 
     return ImFinal
+
+def fInitAff (partie, Irgb) :
+    Igray = cv2.cvtColor(Irgb, cv2.COLOR_BGR2GRAY)
+    ImGrad = fImGrad(Igray)
+    ImLabel = fImCarte(Igray)
+
+    ImContour = fDessinContour(partie, Irgb, ImLabel, ImGrad)
+
+    return ImContour, ImGrad, ImLabel
 
 def fLPE(Ilabel, carteDist) :
     #################################################################
@@ -148,13 +153,13 @@ def fDessinContour (partie,Irgb, ImLabel, ImGrad) :
         #Initialisation de la couleur
         color = [0,0,0]
         if carte.GetColor() == 'b' :
-            color = [0,0,1]
-        elif carte.GetColor() == 'r' : 
             color = [1,0,0]
+        elif carte.GetColor() == 'r' : 
+            color = [0,0,1]
         elif carte.GetColor() == 'a' :
-            color = [0.18, 0.1, 0.3]
+            color = [0.3, 0.1, 0.18]
         else :  #cartes neutre
-            color = [0.95, 0.8, 0.6]
+            color = [0.6, 0.8, 0.95]
 
         #Initialisation du label de gradient de la carte
         x = carte.GetCoord()[0]  #[x,y]
@@ -181,13 +186,13 @@ def fDessinTuile(partie, Irgb, ImLabel) :
             #Initialisation de la couleur
             color = [0,0,0]
             if carte.GetColor() == 'b' :
-                color = [0,0,1]
-            elif carte.GetColor() == 'r' : 
                 color = [1,0,0]
+            elif carte.GetColor() == 'r' : 
+                color = [0,0,1]
             elif carte.GetColor() == 'a' :
-                color = [0.18, 0.1, 0.3]
+                color = [0.25, 0.1, 0.18]
             else :  #cartes neutre
-                color = [0.95, 0.8, 0.6]
+                color = [0.6, 0.8, 0.95]
 
             #Colorisation des contours des cartes
             for y in range (np.shape(Irgb)[0]):
@@ -204,22 +209,27 @@ def fDessinTuile(partie, Irgb, ImLabel) :
 #Affichage Final
 ################################################
 
-#Fonction affichant les conditions de fin de partie
-def fAffFin (partie) : 
-    end = partie.GetMotifFin()
-    print(end)
-    ImFinal = Image.new("RGB", (640, 480), (240,235,210))
-    image_editable = ImageDraw.Draw(ImFinal)
+#Fonction creant les images de fin de partie
+def createFin () : 
+    I_r = Image.new("RGB", (640, 480), (240,235,210))
+    I_b = Image.new("RGB", (640, 480), (240,235,210))
+    I_a = Image.new("RGB", (640, 480), (240,235,210))
     my_font = ImageFont.truetype('Shaka_Pow.ttf', 65)
 
-    if end == 'r' : 
-        image_editable.text((150, 240-70), "Victoire des", fill=(255, 0, 0), font=my_font)
-        image_editable.text((220, 240), "Rouges", fill=(255, 0, 0), font=my_font)
-    elif end == 'b' :
-        image_editable.text((150, 240-70), "Victoire des", fill=(0, 0, 255), font=my_font)
-        image_editable.text((240, 240), "Bleus", fill=(0, 0, 255), font=my_font)    
-    elif end == 'a' :
-        image_editable.text((180, 240-70), "Assassin", fill=(0, 0, 0), font=my_font)
-        image_editable.text((160, 240), "decouvert", fill=(0, 0, 0), font=my_font) 
+    image_editable_r = ImageDraw.Draw(I_r)
+    image_editable_r.text((150, 240-70), "Victoire des", fill=(255, 0, 0), font=my_font)
+    image_editable_r.text((220, 240), "Rouges", fill=(255, 0, 0), font=my_font)
 
-    return ImFinal
+    image_editable_b = ImageDraw.Draw(I_b)
+    image_editable_b.text((150, 240-70), "Victoire des", fill=(0, 0, 255), font=my_font)
+    image_editable_b.text((240, 240), "Bleus", fill=(0, 0, 255), font=my_font)   
+
+    image_editable_a = ImageDraw.Draw(I_a)
+    image_editable_a.text((180, 240-70), "Assassin", fill=(0, 0, 0), font=my_font)
+    image_editable_a.text((160, 240), "decouvert", fill=(0, 0, 0), font=my_font)
+
+    I_r.save('ImFinRouge.png')
+    I_b.save('ImFinBleu.png')
+    I_a.save('ImFinAssassin.png')
+
+

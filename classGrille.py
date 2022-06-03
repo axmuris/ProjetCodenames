@@ -65,20 +65,11 @@ class Grille () :
         matCarte = []
 
         reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
-
-        screen=cv2.cvtColor(screen,cv2.COLOR_RGB2HSV)
-
-        S=screen[:,:,1]
-        V=screen[:,:,2]
-
-        S=0.3*S
-        screen[:,:,1]=S
-
-        V=0.2*V
-        screen[:,:,2]=V
-
-        screen=cv2.cvtColor(screen,cv2.COLOR_HSV2RGB)
-        screen=cv2.cvtColor(screen,cv2.COLOR_RGB2GRAY)
+        #screen=cv2.cvtColor(screen,cv2.COLOR_RGB2GRAY)
+        while True:
+            cv2.imshow('plateau',screen)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
         matCarte = reader.readtext(screen)
 
@@ -118,6 +109,7 @@ class Grille () :
 
         #test du nombre de mot 
         if len(matCarte)<(n*n): #Si pas assez de mot, message d'erreur (et renvoit code erreur?) 
+            print(len(matCarte))
             print("Erreur, tous les mot n'ont pas été détecté. Vérifiez qu'il y ai bien un carré de",n,"*",n,"sur la grille.")
             quit()
         elif len(matCarte)>n*n: #Si trop de mot, supprime les mots les plus improbables
@@ -183,16 +175,21 @@ class Grille () :
             x1 = [math.ceil(carte.GetCoord()[1][0]),math.ceil(carte.GetCoord()[1][1])]
             x2 = [math.ceil(carte.GetCoord()[2][0]),math.ceil(carte.GetCoord()[2][1])]
             x3 = [math.ceil(carte.GetCoord()[3][0]),math.ceil(carte.GetCoord()[3][1])]
-            rectColorTest = screen[np.arange(x0[0], x1[0], 1) , np.arange(x3[1]-x0[1], x0[1], 1)]
-            print(rectColorTest)
+            #rectColorTest = screen[np.arange(x0[0], x1[0], 1) , np.arange(x3[1]-x0[1], x0[1], 1)]
+            #print(rectColorTest)
 
-            
+            if carte.GetColor() == 'b' :
+                pictColor = 'b'
+            else :
+                pictColor = 'no'
 
 
-            pictColor = 'r' #récupère la couleur de la carte sur le screen
+            #récupère la couleur de la carte sur le screen
             realColor = carte.GetColor()
-            if pictColor != realColor : 
-                print("Error : La couleur de la tuile ne correspond pas à la couleur associée à la carte")
-            else : 
+            if pictColor == realColor :
+                print(carte.GetColor())
                 carte.SetFind(True)
+            elif pictColor != realColor and pictColor != 'no': 
+                print("Error : La couleur de la tuile ne correspond pas à la couleur associée à la carte")
+            
 
