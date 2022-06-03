@@ -65,7 +65,6 @@ class Grille () :
     def fDetecCarte(self, screen,n) : 
         matCarte = []
 
-        
         reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
 
         screen=cv2.cvtColor(screen,cv2.COLOR_RGB2HSV)
