@@ -55,12 +55,14 @@ class Partie () :
     ################################################
     #Methodes
     def MAJ_Partie(self,) : # TODO : A tester
+        self.__motBleu = []
+        self.__motRouge = []
         for carte in self.__plateau.GetGrille() : 
             #MAJ des listes maitre espion
             if carte.GetColor() == 'r' and carte.GetFind() == False : 
                 self.__motRouge.append(carte.GetWord())
-            elif carte.GetColor() == 'b' and carte.GetFind() == False :
-               self.__motBleu.append(carte.GetWord())
+            elif carte.GetColor() == 'b' and carte.GetFind() == False : 
+                self.__motBleu.append(carte.GetWord())
 
             #Verification assassin
             elif carte.GetColor() == 'a' and carte.GetFind() == True : 
