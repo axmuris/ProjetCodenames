@@ -19,12 +19,24 @@
             #Check error
 
 from ctypes import sizeof
+from cv2 import COLOR_BGR2HSV, cvtColor
 import numpy as np
 import math
 import cv2
 import random
 import easyocr
 from classCarte import Carte
+
+def detectionColor(coord,image,color1,color2): #color1=(5, 75, 25),color2=(25, 255, 255)
+    image=cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(image, color1,color2)
+    if mask(coord)!=(0,0,0):
+        presence=True
+    else:
+        presence=False
+    return (presence)
+
+
 
 class Grille () : 
     ################################################
@@ -53,7 +65,7 @@ class Grille () :
     def fDetecCarte(self, screen,n) : 
         matCarte = []
 
-        """
+        
         reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
 
         screen=cv2.cvtColor(screen,cv2.COLOR_BGR2GRAY)
@@ -135,7 +147,7 @@ class Grille () :
                      ([[299, 447], [339, 447], [339, 461], [299, 461]], 'DANSE', 0.9961014605773721), 
                      ([[421, 445], [479, 445], [479, 461], [421, 461]], 'FANTOME', 0.46388805167658925), 
                      ([[559, 447], [605, 447], [605, 461], [559, 461]], 'ESPION', 0.9934963953204257)    ] 
-
+        """
         return matCarte
 
     #Methode permettant de definir les couleurs des cartes pour les maîtres espions en début de partie
@@ -162,6 +174,9 @@ class Grille () :
             x3 = [math.ceil(carte.GetCoord()[3][0]),math.ceil(carte.GetCoord()[3][1])]
             rectColorTest = screen[np.arange(x0[0], x1[0], 1) , np.arange(x3[1]-x0[1], x0[1], 1)]
             print(rectColorTest)
+
+            
+
 
             pictColor = 'r' #récupère la couleur de la carte sur le screen
             realColor = carte.GetColor()

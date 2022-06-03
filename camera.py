@@ -43,7 +43,9 @@ while True:
 
 while(newPartie.GetMotifFin()=='n'): #Condition arret = partie finie
     
-    cv2.waitkey('q')
+    while(True):
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
     # Capture frame-by-frame
     ret, current_frame = cap.read()
