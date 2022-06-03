@@ -26,16 +26,51 @@ import random
 import easyocr
 from classCarte import Carte
 
-def detectionColor(image,coord,color1,color2): #coord=[x,y],color1=(5, 75, 25),color2=(25, 255, 255)
+def getMask(image,color): #get the color mask of the screen
     image=cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
-    mask = cv2.inRange(image, color1,color2)
-    if mask(coord)!=(0,0,0):
-        presence=True
-    else:
-        presence=False
-    return (presence)
 
+    if color=='red':
+        mask1 = cv2.inRange(image, (0, 75, 50), (25, 255, 255)) #50%
+        mask2 = cv2.inRange(image, (155, 75, 50), (180, 255, 255))
 
+        imask = mask1>0
+        imask += mask2>0
+        
+
+    elif color=='blue':
+        mask = cv2.inRange(image, (70, 65, 25), (140, 255, 255)) #%
+        
+        imask = mask>0
+        
+
+    elif color=='purple':
+        mask = cv2.inRange(image, (130, 100, 30), (150, 255, 175)) #X%
+
+        imask = mask>0
+        
+
+    elif color=='green':
+        mask = cv2.inRange(image, (20, 5, 80), (90, 80, 245)) 
+        
+        imask = mask>0
+        
+
+    maskFin = np.zeros_like(image, np.uint8)
+    maskFin[imask] = image[imask]
+
+    return maskFin
+
+def detectColor(centre,mask):
+    xside=30
+    yside=40
+    coord=[[centre[0]-xside,centre[1]],[centre[0]-xside,centre[1]-yside],[centre[0]+xside,centre[1]-yside],[centre[0]+xside,centre[1]]]
+    pixcol=0
+    for x in range (coord[0][0],coord[2][0]):
+        for y in range (coord[1][1],coord[0][1]):
+            if mask[y,x].all()!=np.zeros((3,1)).all():
+                pixcol +=1
+    pourcent=pixcol/(xside*2*yside)
+    return pourcent
 
 class Grille () : 
     ################################################
@@ -169,27 +204,62 @@ class Grille () :
 
     #Methode permettant de mettre a jour le parametre find des cartes en fonction de l'avancement dans le partie
     def MAJ_Grille(self, screen) : #TODO : A tester
-        for carte in self.GetGrille() : 
-            #TODO : Defintion couleur au centre, pictColor
-            x0 = [math.ceil(carte.GetCoord()[0][0]),math.ceil(carte.GetCoord()[0][1])]
-            x1 = [math.ceil(carte.GetCoord()[1][0]),math.ceil(carte.GetCoord()[1][1])]
-            x2 = [math.ceil(carte.GetCoord()[2][0]),math.ceil(carte.GetCoord()[2][1])]
-            x3 = [math.ceil(carte.GetCoord()[3][0]),math.ceil(carte.GetCoord()[3][1])]
-            #rectColorTest = screen[np.arange(x0[0], x1[0], 1) , np.arange(x3[1]-x0[1], x0[1], 1)]
-            #print(rectColorTest)
 
-            if carte.GetColor() == 'b' :
-                pictColor = 'b'
-            else :
-                pictColor = 'no'
+        for color in ['red','blue','green','purple']:
 
+            mask=getMask(screen,color)
 
-            #récupère la couleur de la carte sur le screen
+            for carte in self.GetGrille() : 
+                #TODO : Defintion couleur au centre, pictColor
+                x0 = [math.ceil(carte.GetCoord()[0][0]),math.ceil(carte.GetCoord()[0][1])]
+                x1 = [math.ceil(carte.GetCoord()[1][0]),math.ceil(carte.GetCoord()[1][1])]
+                x2 = [math.ceil(carte.GetCoord()[2][0]),math.ceil(carte.GetCoord()[2][1])]
+                x3 = [math.ceil(carte.GetCoord()[3][0]),math.ceil(carte.GetCoord()[3][1])]
+                centre=[(x0[0]+x2[0])/2,(x0[1]+x2[1])/2]
+
+                pctCol=detectColor(centre,mask)  #r:50%, #bleu:30%, #green:22% #violet:X%
+                
+                if color=='red':
+                    carte.SetpctColor(self, 0, pctCol)
+
+                elif color=='blue':
+                    carte.SetpctColor(self, 1, pctCol)
+
+                elif color=='green':
+                    carte.SetpctColor(self, 2, pctCol)
+
+                elif color=='purple':
+                    carte.SetpctColor(self, 3, pctCol)
+
+        for carte in self.GetGrille():
+            nbCol=0
+
+            if carte.GetpctColor()[0]>=0.5:
+                pictColor= 'r'
+                nbCol=nbCol + 1
+            
+            if carte.GetpctColor()[1]>=0.3:
+                pictColor= 'b'
+                nbCol=nbCol + 1
+
+            if carte.GetpctColor()[2]>=0.20:
+                pictColor= 'n'
+                nbCol=nbCol +1
+            
+            if carte.GetpctColor()[2]>=1:   #A modifier quand on aura testé l'assassin
+                pictColor= 'a'
+                nbCol=nbCol +1
+
+            if nbCol==0:
+                pictColor='no'
+            
+            elif nbCol >1:
+                print('Erreur, plusieurs couleurs ont été détectées pour la carte',carte.GetWord())
+                pictColor='err'
+
             realColor = carte.GetColor()
             if pictColor == realColor :
                 print(carte.GetColor())
                 carte.SetFind(True)
             elif pictColor != realColor and pictColor != 'no': 
                 print("Error : La couleur de la tuile ne correspond pas à la couleur associée à la carte")
-            
-
