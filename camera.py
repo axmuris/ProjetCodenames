@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from affichage import fAffichage
-from fctImage import fLPE
+from fctImage import *
 from classPartie import Partie
 
 # 0 = Use  local webcam
@@ -29,41 +29,39 @@ ret, current_frame = cap.read()
 #Initialisation de la partie
 newPartie = Partie(current_frame)
 
-current_frame = fAffichage(newPartie, current_frame)
-#Initialisation des matrices d'affichage
-ImLabel = fLPE(newPartie, current_frame)
-#Attribution des label aux cartes
+current_frame = fMajAff(newPartie, current_frame)
 
 
 while True:
     cv2.imshow('plateau',current_frame)
 
     #q por fermer la fenêtre
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(33):
         stop=1
         break
 
-cv2.destroyAllWindows()
- # release the capture
-cap.release()
-'''
-while(newPartie.__motifFin=='n'): #Condition arret = partie finie
+
+while(newPartie.GetMotifFin()=='n'): #Condition arret = partie finie
+    
+    while(True):
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
     # Capture frame-by-frame
     ret, current_frame = cap.read()
 
     #MAJ Partie
     newPartie.GetPlateau().MAJ_Grille()
-    etat, motifEnd = newPartie.MAJ_Partie()
+    newPartie.MAJ_Partie()
     
     #MAJ Affichage 
-    current_frame = fAffichage(newPartie, current_frame)
+    current_frame = fMajAff(newPartie, current_frame)
 
     #retour webcam
     cv2.imshow('retour',current_frame)
 
-    cv2.waitkey('SPACE')
-'''
+
+#affichage écran fin
 
 
 # release the capture

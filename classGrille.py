@@ -19,12 +19,24 @@
             #Check error
 
 from ctypes import sizeof
+from cv2 import COLOR_BGR2HSV, cvtColor
 import numpy as np
 import math
 import cv2
 import random
 import easyocr
 from classCarte import Carte
+
+def detectionColor(coord,image,color1,color2): #color1=(5, 75, 25),color2=(25, 255, 255)
+    image=cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(image, color1,color2)
+    if mask(coord)!=(0,0,0):
+        presence=True
+    else:
+        presence=False
+    return (presence)
+
+
 
 class Grille () : 
     ################################################
@@ -35,7 +47,7 @@ class Grille () :
         #Creation des cartes
         matCarte = self.fDetecCarte(screen, n)
         for ID in range (n*n) : 
-            self.__grille.append(Carte(ID, matCarte[ID][0], matCarte[ID][1].upper()))
+            self.__grille.append(Carte(ID, [[math.ceil(matCarte[ID][0][0][0]),math.ceil(matCarte[ID][0][0][1])],[math.ceil(matCarte[ID][0][1][0]),math.ceil(matCarte[ID][0][1][1])],[math.ceil(matCarte[ID][0][2][0]),math.ceil(matCarte[ID][0][2][1])],[math.ceil(matCarte[ID][0][3][0]),math.ceil(matCarte[ID][0][3][1])]], matCarte[ID][1].upper()))
 
         #Attribution des couleurs
         self.fSetColors(n)
@@ -135,7 +147,6 @@ class Grille () :
                      ([[421, 445], [479, 445], [479, 461], [421, 461]], 'FANTOME', 0.46388805167658925), 
                      ([[559, 447], [605, 447], [605, 461], [559, 461]], 'ESPION', 0.9934963953204257)    ] 
         """
-
         return matCarte
 
     #Methode permettant de definir les couleurs des cartes pour les maîtres espions en début de partie
@@ -162,6 +173,9 @@ class Grille () :
             x3 = [math.ceil(carte.GetCoord()[3][0]),math.ceil(carte.GetCoord()[3][1])]
             rectColorTest = screen[np.arange(x0[0], x1[0], 1) , np.arange(x3[1]-x0[1], x0[1], 1)]
             print(rectColorTest)
+
+            
+
 
             pictColor = 'r' #récupère la couleur de la carte sur le screen
             realColor = carte.GetColor()

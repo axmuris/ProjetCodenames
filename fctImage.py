@@ -9,14 +9,13 @@ from matplotlib import pyplot as plt
 import math
 from PIL import Image, ImageFont, ImageDraw
 
-
 ################################################
 #Mise a jour de l'affichage
 ################################################
 
 #Fonction principale d'affichage
-def fMajAff(Irgb, partie) :
-    Igray = cv2.cvtColor(Irgb, cv2.COLOR_RGB2GRAY)
+def fMajAff( partie,Irgb) :
+    Igray = cv2.cvtColor(Irgb, cv2.COLOR_BGR2GRAY)
     ImLabel = fImCarte(Igray)
     ImGrad = fImGrad(Igray)
 
