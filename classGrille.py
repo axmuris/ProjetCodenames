@@ -77,20 +77,21 @@ class Grille () :
     #Initialisation
     def __init__(self, n, screen) :
         self.__grille = []
+        self.__Accord = 0
 
-        #Creation des cartes
-        matCarte=0
-        Accord=0
-        while(Accord==0):
-            matCarte = self.fDetecCarte(screen, n)
-            while (matCarte==0):
-                while True:
-                    if cv2.waitKey(1) & 0xFF == ord('q'):
-                        break
-                matCarte = self.fDetecCarte(screen, n)
-            int(input("Fin de la détection de grille, les mots sont-ils corrects? 0=Non 1=Oui"))
+        #Creation des cartes        
+        matCarte = self.fDetecCarte(screen, n)
+        if matCarte==0:
+            self.__Accord=0
+        else :
+            verif=int(input("Fin de la détection de grille, les mots sont-ils corrects? 0=Non 1=Oui"))
+            if verif==0:
+                self.__Accord=0
+            if verif!=0:
+                self.__Accord=1
 
-           
+        if self.__Accord==0:
+            return
 
         for ID in range (n*n) : 
             self.__grille.append(Carte(ID, [[math.ceil(matCarte[ID][0][0][0]),math.ceil(matCarte[ID][0][0][1])],[math.ceil(matCarte[ID][0][1][0]),math.ceil(matCarte[ID][0][1][1])],[math.ceil(matCarte[ID][0][2][0]),math.ceil(matCarte[ID][0][2][1])],[math.ceil(matCarte[ID][0][3][0]),math.ceil(matCarte[ID][0][3][1])]], matCarte[ID][1].upper()))
@@ -102,6 +103,14 @@ class Grille () :
     #Getter
     def GetGrille(self,) : 
         return self.__grille
+    
+    def GetAccord(self,) :
+        return self.__Accord
+
+    ################################################
+    #Setter
+    def SetAccord(self,Accord) : 
+        self.__Accord=Accord
 
     ################################################
     #Methodes
@@ -111,12 +120,17 @@ class Grille () :
     def fDetecCarte(self, screen,n) : 
         matCarte = []
 
-        reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
-        #screen=cv2.cvtColor(screen,cv2.COLOR_RGB2GRAY)
         while True:
             cv2.imshow('plateau',screen)
+            print("Press Q to continue")
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
+        
+       
+
+        reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
+        #screen=cv2.cvtColor(screen,cv2.COLOR_RGB2GRAY)
+
 
         matCarte = reader.readtext(screen)
 

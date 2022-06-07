@@ -18,7 +18,10 @@ class Partie () :
     ################################################
     #Initialisation
     def __init__(self, screen) :
-        self.__plateau = Grille(5, screen) 
+        self.__plateau = Grille(5, screen)
+        if self.__plateau.GetAccord()==0:
+            return 
+
         self.__motRouge = []
         self.__motBleu = []
         self.__etatPartie = 0 # Initial = 0 , En cours = 1 , Fini = 2
@@ -47,10 +50,16 @@ class Partie () :
     def GetMotifFin(self,) : 
         return self.__motifFin
 
+    def GetAccord(self,) :
+        return self.__plateau.GetAccord()
+
     ################################################
     #Setter
     def SetMotifFin(self, motif) : 
         self.__motifFin = motif
+    
+    def SetAccord(self, Accord) : 
+        self.__plateau.SetAccord(Accord)
 
     ################################################
     #Methodes
