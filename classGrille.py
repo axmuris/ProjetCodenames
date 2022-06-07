@@ -297,7 +297,6 @@ class Grille () :
 
             realColor = carte.GetColor()
             if pictColor == realColor :
-                print(carte.GetColor())
                 carte.SetFind(True)
             elif pictColor != realColor and pictColor != 'no': 
                 print("Error : La couleur de la tuile ne correspond pas à la couleur associée à la carte")
