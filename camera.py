@@ -16,7 +16,7 @@ from classPartie import Partie
 
 # 0 = Use  local webcam
 # 1 = Use peripheric webcam (contrast=4%, brigthness=0%) 
-cam = 1
+cam = 0
 
 cap = cv2.VideoCapture(cam)
 
@@ -27,7 +27,12 @@ if not cap:
 ret, current_frame = cap.read()
 
 #Initialisation de la partie
+
 newPartie = Partie(current_frame)
+
+while newPartie.GetAccord()==0 :
+    ret, current_frame = cap.read()
+    newPartie = Partie(current_frame)
 
 createFin()
 current_frame, ImGrad, ImLabel = fInitAff(newPartie, current_frame)

@@ -21,7 +21,7 @@ class Carte () :
             #neutre = n, rouge = r, bleu = b, assassin = a
         self.__find = False
         self.__label = 0
-        self.pctColor=[0,0,0,0] #[red,blue,green,purple]
+        self.__pctColor=[0,0,0,0] #[red,blue,green,purple]
     
     ################################################
     #Getters
@@ -44,7 +44,7 @@ class Carte () :
         return self.__label
 
     def GetpctColor(self,):
-        return self.pctColor
+        return self.__pctColor
 
     ################################################
     #Setters
