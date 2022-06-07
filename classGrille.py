@@ -80,12 +80,16 @@ class Grille () :
 
         #Creation des cartes
         matCarte=0
-        matCarte = self.fDetecCarte(screen, n)
-        while (matCarte==0):
-            while True:
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
+        Accord=0
+        while(Accord==0):
             matCarte = self.fDetecCarte(screen, n)
+            while (matCarte==0):
+                while True:
+                    if cv2.waitKey(1) & 0xFF == ord('q'):
+                        break
+                matCarte = self.fDetecCarte(screen, n)
+            int(input("Fin de la détection de grille, les mots sont-ils corrects? 0=Non 1=Oui"))
+
            
 
         for ID in range (n*n) : 
