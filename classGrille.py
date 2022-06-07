@@ -38,7 +38,7 @@ def getMask(image,color): #get the color mask of the screen
         
 
     elif color=='blue':
-        mask = cv2.inRange(image, (70, 65, 25), (140, 255, 255)) 
+        mask = cv2.inRange(image, (70, 65, 25), (120, 255, 255)) 
         
         imask = mask>0
         
@@ -50,7 +50,7 @@ def getMask(image,color): #get the color mask of the screen
         
 
     elif color=='green':
-        mask = cv2.inRange(image, (20, 5, 80), (90, 80, 245)) 
+        mask = cv2.inRange(image, (10, 15, 80), (50, 30, 150)) 
         
         imask = mask>0
         
@@ -264,7 +264,6 @@ class Grille () :
                     carte.SetpctColor(2, pctCol)
 
                 elif color=='purple':
-                    print('bite')
                     carte.SetpctColor(3, pctCol)
 
         seuilColor=[0.5,0.3,0.25,0.5] #Pourcentage de détection pour chaque couleur
@@ -284,7 +283,7 @@ class Grille () :
                 pictColor= 'n'
                 nbCol=nbCol +1
             
-            if carte.GetpctColor()[3]>=seuilColor[3]:   #A modifier quand on aura testé l'assassin
+            if carte.GetpctColor()[3]>=seuilColor[3]:
                 pictColor= 'a'
                 nbCol=nbCol +1
 
