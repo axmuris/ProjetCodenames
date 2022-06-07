@@ -44,7 +44,7 @@ def getMask(image,color): #get the color mask of the screen
         
 
     elif color=='purple':
-        mask = cv2.inRange(image, (120, 15, 15), (170, 255, 225)) 
+        mask = cv2.inRange(image, (120, 30, 15), (170, 255, 175)) 
 
         imask = mask>0
         
@@ -141,7 +141,7 @@ class Grille () :
 
         indiceSuppr=[] #Liste d'indice des mot à supprimer
         for resul in matCarte:
-            if resul[2]<=0.1: #retire le mot si proba<0.1
+            if resul[2]<=0.05: #retire le mot si proba<0.05
                 indiceSuppr.append(matCarte.index(resul))
             elif len(resul[1])<=2: #retire le mot si 2 lettres ou moins
                 indiceSuppr.append(matCarte.index(resul))
@@ -162,7 +162,7 @@ class Grille () :
         #test du nombre de mot 
         if len(matCarte)<(n*n): #Si pas assez de mot, message d'erreur (et renvoit code erreur?) 
             print(len(matCarte))
-            print("Erreur, tous les mot n'ont pas été détecté. Vérifiez qu'il y ai bien un carré de",n,"*",n,"sur la grille.")
+            print("Erreur, tous les mot n'ont pas été détecté. Vérifiez qu'il y ait bien un carré de",n,"*",n,"sur la grille.")
             return(0)
         elif len(matCarte)>n*n: #Si trop de mot, supprime les mots les plus improbables
             while len(matCarte)!=n*n:
@@ -239,7 +239,7 @@ class Grille () :
     #Methode permettant de mettre a jour le parametre find des cartes en fonction de l'avancement dans le partie
     def MAJ_Grille(self, screen) : #TODO : A tester
 
-        for color in ['red','blue','green','purple']:
+        for color in ['red','blue','purple','green']:
 
             mask=getMask(screen,color)
 
@@ -263,6 +263,7 @@ class Grille () :
                     carte.SetpctColor(2, pctCol)
 
                 elif color=='purple':
+                    print('bite')
                     carte.SetpctColor(3, pctCol)
 
         seuilColor=[0.5,0.3,0.25,0.5] #Pourcentage de détection pour chaque couleur
