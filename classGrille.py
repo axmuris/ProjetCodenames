@@ -79,7 +79,15 @@ class Grille () :
         self.__grille = []
 
         #Creation des cartes
+        matCarte=0
         matCarte = self.fDetecCarte(screen, n)
+        while (matCarte==0):
+            while True:
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+            matCarte = self.fDetecCarte(screen, n)
+           
+
         for ID in range (n*n) : 
             self.__grille.append(Carte(ID, [[math.ceil(matCarte[ID][0][0][0]),math.ceil(matCarte[ID][0][0][1])],[math.ceil(matCarte[ID][0][1][0]),math.ceil(matCarte[ID][0][1][1])],[math.ceil(matCarte[ID][0][2][0]),math.ceil(matCarte[ID][0][2][1])],[math.ceil(matCarte[ID][0][3][0]),math.ceil(matCarte[ID][0][3][1])]], matCarte[ID][1].upper()))
 
@@ -146,7 +154,7 @@ class Grille () :
         if len(matCarte)<(n*n): #Si pas assez de mot, message d'erreur (et renvoit code erreur?) 
             print(len(matCarte))
             print("Erreur, tous les mot n'ont pas été détecté. Vérifiez qu'il y ai bien un carré de",n,"*",n,"sur la grille.")
-            quit()
+            return(0)
         elif len(matCarte)>n*n: #Si trop de mot, supprime les mots les plus improbables
             while len(matCarte)!=n*n:
                 probmin=1
@@ -231,22 +239,24 @@ class Grille () :
                 elif color=='purple':
                     carte.SetpctColor(self, 3, pctCol)
 
+        seuilColor=[0.5,0.3,0.2,1] #Pourcentage de détection pour chaque couleur
+
         for carte in self.GetGrille():
             nbCol=0
 
-            if carte.GetpctColor()[0]>=0.5:
+            if carte.GetpctColor()[0]>=seuilColor[0]:
                 pictColor= 'r'
                 nbCol=nbCol + 1
             
-            if carte.GetpctColor()[1]>=0.3:
+            if carte.GetpctColor()[1]>=seuilColor[1]:
                 pictColor= 'b'
                 nbCol=nbCol + 1
 
-            if carte.GetpctColor()[2]>=0.20:
+            if carte.GetpctColor()[2]>=seuilColor[2]:
                 pictColor= 'n'
                 nbCol=nbCol +1
             
-            if carte.GetpctColor()[2]>=1:   #A modifier quand on aura testé l'assassin
+            if carte.GetpctColor()[3]>=seuilColor[3]:   #A modifier quand on aura testé l'assassin
                 pictColor= 'a'
                 nbCol=nbCol +1
 
