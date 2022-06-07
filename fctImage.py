@@ -90,6 +90,10 @@ def fImCarte (I) :
     #################################################################
     #Obtention des marqueurs
 
+    plt.figure()
+    plt.imshow(I)
+    plt.show()
+
     #Seuillage de l'image
     [th, Iseuil] = cv2.threshold(I, 100, 255, cv2.THRESH_BINARY)
 
@@ -100,6 +104,10 @@ def fImCarte (I) :
     Ifond = cv2.dilate(Iseuil, s)
     #Ajout du marqueu de fond
     Imark = Imark + (255 - Ifond)
+
+    plt.figure()
+    plt.imshow(Imark)
+    plt.show()
 
     #Attribution des labels uniques aux marqueurs
     [nLabel, Ilabel] = cv2.connectedComponents(Imark)
@@ -115,6 +123,10 @@ def fImCarte (I) :
     #################################################################
     #Application de l'algorithme de LPE
     ImLabel = fLPE(Ilabel, carteDist)
+
+    plt.figure()
+    plt.imshow(ImLabel)
+    plt.show()
 
     return ImLabel
 
@@ -140,6 +152,10 @@ def fImGrad (I) :
 
     #Attribution des labels uniques aux marqueurs
     [nLabel, ImGrad] = cv2.connectedComponents(ImGrad)
+
+    plt.figure()
+    plt.imshow(ImGrad)
+    plt.show()
 
     return ImGrad
 

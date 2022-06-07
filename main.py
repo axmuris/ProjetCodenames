@@ -24,7 +24,7 @@ from classPartie import Partie
 #grille1 = Grille(4, 0)
 
 #Test Creation d'une partie
-"""
+
 I = cv2.imread('grille.png', 0)
 
 partie1 = Partie(I)
@@ -56,7 +56,7 @@ Irgb = fDessinTuile(partie1, ImContour, ImLabel)
 plt.figure()
 plt.imshow(Irgb)
 plt.show()
-"""
+
 """
 #Test fMajAff
 Irgb = cv2.imread('grille.png')
@@ -99,6 +99,7 @@ plt.show()
 #print( result)
 
 #Test Final avec image
+"""
 current_frame = cv2.imread('resultat.png')
 
 #Initialisation de la partie
@@ -163,3 +164,4 @@ print("Fin de partie")
 
 # release the capture
 cv2.destroyAllWindows()
+"""

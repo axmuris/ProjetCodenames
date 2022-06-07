@@ -204,6 +204,7 @@ class Grille () :
                      ([[559, 447], [605, 447], [605, 461], [559, 461]], 'ESPION', 0.9934963953204257)    ] 
         """
 
+
                 ######Test mot, à supprimer après######
         moyenne=0
         probmin=1
