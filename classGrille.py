@@ -98,6 +98,7 @@ class Grille () :
         #Les coordonées du rectangle autour du mot, le mot trouvé, la probabilité que le resultat soit juste
     def fDetecCarte(self, screen,n) : 
         matCarte = []
+        """
 
         reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
         #screen=cv2.cvtColor(screen,cv2.COLOR_RGB2GRAY)
@@ -185,7 +186,6 @@ class Grille () :
                      ([[299, 447], [339, 447], [339, 461], [299, 461]], 'DANSE', 0.9961014605773721), 
                      ([[421, 445], [479, 445], [479, 461], [421, 461]], 'FANTOME', 0.46388805167658925), 
                      ([[559, 447], [605, 447], [605, 461], [559, 461]], 'ESPION', 0.9934963953204257)    ] 
-        """
         return matCarte
 
     #Methode permettant de definir les couleurs des cartes pour les maîtres espions en début de partie
