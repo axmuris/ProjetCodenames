@@ -30,7 +30,7 @@ def getMask(image,color): #get the color mask of the screen
     image=cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
 
     if color=='red':
-        mask1 = cv2.inRange(image, (0, 75, 50), (25, 255, 255)) #50%
+        mask1 = cv2.inRange(image, (0, 75, 50), (25, 255, 255)) 
         mask2 = cv2.inRange(image, (155, 75, 50), (180, 255, 255))
 
         imask = mask1>0
@@ -38,13 +38,13 @@ def getMask(image,color): #get the color mask of the screen
         
 
     elif color=='blue':
-        mask = cv2.inRange(image, (70, 65, 25), (140, 255, 255)) #%
+        mask = cv2.inRange(image, (70, 65, 25), (140, 255, 255)) 
         
         imask = mask>0
         
 
     elif color=='purple':
-        mask = cv2.inRange(image, (130, 100, 30), (150, 255, 175)) #X%
+        mask = cv2.inRange(image, (120, 15, 15), (170, 255, 225)) 
 
         imask = mask>0
         
@@ -120,10 +120,15 @@ class Grille () :
     def fDetecCarte(self, screen,n) : 
         matCarte = []
 
+        message=1
         while True:
+            if message==1:
+                print("Press Q to continue")
+                message=0
             cv2.imshow('plateau',screen)
-            print("Press Q to continue")
+            
             if cv2.waitKey(1) & 0xFF == ord('q'):
+                message=1
                 break
         
        
@@ -131,7 +136,7 @@ class Grille () :
         reader = easyocr.Reader(['fr']) # this needs to run only once to load the model into memory
         #screen=cv2.cvtColor(screen,cv2.COLOR_RGB2GRAY)
 
-
+        screen=cv2.cvtColor(screen,cv2.COLOR_BGR2GRAY)
         matCarte = reader.readtext(screen)
 
         indiceSuppr=[] #Liste d'indice des mot à supprimer
@@ -152,21 +157,7 @@ class Grille () :
         for i in sorted(indiceSuppr, reverse=True): #suppression des mots de la liste d'indice
             del(matCarte[i])
 
-        ######Test mot, à supprimer après######
-        moyenne=0
-        probmin=1
-        min=0
-        for i in matCarte:
-            print(i,"\n")
-            moyenne=moyenne+i[2]
-            if i[2]<probmin:
-                probmin=i[2]
-                min=i
 
-        moyenne=moyenne/len(matCarte)
-        print("Moyenne:",moyenne)
-        print("Min:",min,"\n")
-        ######Test mot, à supprimer après######
 
         #test du nombre de mot 
         if len(matCarte)<(n*n): #Si pas assez de mot, message d'erreur (et renvoit code erreur?) 
@@ -212,6 +203,23 @@ class Grille () :
                      ([[421, 445], [479, 445], [479, 461], [421, 461]], 'FANTOME', 0.46388805167658925), 
                      ([[559, 447], [605, 447], [605, 461], [559, 461]], 'ESPION', 0.9934963953204257)    ] 
         """
+
+                ######Test mot, à supprimer après######
+        moyenne=0
+        probmin=1
+        min=0
+        for i in matCarte:
+            print(i,"\n")
+            moyenne=moyenne+i[2]
+            if i[2]<probmin:
+                probmin=i[2]
+                min=i
+
+        moyenne=moyenne/len(matCarte)
+        print("Moyenne:",moyenne)
+        print("Min:",min,"\n")
+        ######Test mot, à supprimer après######
+
         return matCarte
 
     #Methode permettant de definir les couleurs des cartes pour les maîtres espions en début de partie
@@ -241,23 +249,23 @@ class Grille () :
                 x1 = [math.ceil(carte.GetCoord()[1][0]),math.ceil(carte.GetCoord()[1][1])]
                 x2 = [math.ceil(carte.GetCoord()[2][0]),math.ceil(carte.GetCoord()[2][1])]
                 x3 = [math.ceil(carte.GetCoord()[3][0]),math.ceil(carte.GetCoord()[3][1])]
-                centre=[(x0[0]+x2[0])/2,(x0[1]+x2[1])/2]
+                centre=[math.ceil((x0[0]+x2[0])/2),math.ceil((x0[1]+x2[1])/2)]
 
                 pctCol=detectColor(centre,mask)  #r:50%, #bleu:30%, #green:22% #violet:X%
                 
                 if color=='red':
-                    carte.SetpctColor(self, 0, pctCol)
+                    carte.SetpctColor(0, pctCol)
 
                 elif color=='blue':
-                    carte.SetpctColor(self, 1, pctCol)
+                    carte.SetpctColor(1, pctCol)
 
                 elif color=='green':
-                    carte.SetpctColor(self, 2, pctCol)
+                    carte.SetpctColor(2, pctCol)
 
                 elif color=='purple':
-                    carte.SetpctColor(self, 3, pctCol)
+                    carte.SetpctColor(3, pctCol)
 
-        seuilColor=[0.5,0.3,0.2,1] #Pourcentage de détection pour chaque couleur
+        seuilColor=[0.5,0.3,0.25,0.5] #Pourcentage de détection pour chaque couleur
 
         for carte in self.GetGrille():
             nbCol=0
